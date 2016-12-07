@@ -5,7 +5,7 @@ include config.mk
 install:
 	@echo Installing to to ${PREFIX}/bin ...
 	@mkdir -p ${PREFIX}/bin
-	@cp -f bin/disk-speed ${PREFIX}/bin
+	@cp -f disk-speed.sh ${PREFIX}/bin/disk-speed
 	@chmod 755 ${PREFIX}/bin/disk-speed
 
 uninstall:
