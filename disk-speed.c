@@ -3,6 +3,8 @@
 #include <sysexits.h>
 #include <stdlib.h>
 
+// POSIX.1-2008
+#define _XOPEN_SOURCE 700
 
 /* Remove trailing newline characters of `string`,
  * provided `string` itself does not contain newline characters in other places.
