@@ -66,18 +66,9 @@ void exec(const char* command_line, void (*callback)(const int, const char *))
     FILE* output = popen(command_line, "r");
 
     char line[4096];
-    while (fgets(line, sizeof line, output) != NULL)
-    {
-        rtrim(line);
-    }
-    if (feof(output))
-    {
-        callback(pclose(output), line);
-    }
-    else
-    {
-        bug("exec", command_line);
-    }
+    fgets(line, sizeof line, output);
+    rtrim(line);
+    callback(pclose(output), line);
 }
 
 
