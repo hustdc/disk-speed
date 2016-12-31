@@ -2,5 +2,5 @@
 PREFIX = /usr/local
 
 # cc options
-CFLAGS += -std=c11 -Wall -Wextra -Wtype-limits -Wconversion -Ofast
+CFLAGS += -std=gnu11 -Wall -Wextra -Wtype-limits -Wconversion -Ofast
 CC = clang
