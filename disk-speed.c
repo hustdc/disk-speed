@@ -12,7 +12,8 @@
  */
 void rtrim(char* string)
 {
-    string[strcspn(string, "\n\r")] = '\0';
+    string[strcspn(string, "\n\r")] = '\0'
+    ;
 }
 
 /* Append `name` to `destination`.
@@ -25,12 +26,15 @@ void concat_shortened(char* destination, const char* name)
     {
         char shortened[121];
         strncpy(shortened, name, 120);
-        strcat(destination, shortened);
-        strcat(destination, "...");
+        strcat(destination, shortened)
+        ;
+        strcat(destination, "...")
+        ;
     }
     else
     {
-        strcat(destination, name);
+        strcat(destination, name)
+        ;
     }
 }
 
@@ -52,10 +56,14 @@ void write_error_line(char* line)
 void bug(const char* function, const char* parameters)
 {
     char error_message[256] = "Error: ";
-    concat_shortened(error_message, function);
-    strcat(error_message, "(");
-    concat_shortened(error_message, parameters);
-    concat_shortened(error_message, ")");
+    concat_shortened(error_message, function)
+    ;
+    strcat(error_message, "(")
+    ;
+    concat_shortened(error_message, parameters)
+    ;
+    concat_shortened(error_message, ")")
+    ;
 
     write_error_line(error_message);
     exit(EX_SOFTWARE);
@@ -70,7 +78,8 @@ void exec(const char* command_line, void (*callback)(const int, const char *))
 
     char line[4096];
     fgets(line, sizeof line, output);
-    rtrim(line);
+    rtrim(line)
+    ;
     callback(pclose(output), line);
 }
 
@@ -122,8 +131,10 @@ void benchmark(const int status, const char* content)
         for (int i = 3; i > 0; i--)
         {
             char command_line[100] = "hdparm -t ";
-            strcat(command_line, content);
-            strcat(command_line, " | grep -E -o '[0-9.]+ [GM]B/s'");
+            strcat(command_line, content)
+            ;
+            strcat(command_line, " | grep -E -o '[0-9.]+ [GM]B/s'")
+            ;
             exec(command_line, read_report);
         }
     }
@@ -138,13 +149,16 @@ void benchmark(const int status, const char* content)
 void has_executable(const char *name)
 {
     char which[6 + 100 + 1] = "which ";
-    strcat(which, name);
-    strcat(which, " > /dev/null");
+    strcat(which, name)
+    ;
+    strcat(which, " > /dev/null")
+    ;
     int status = system(which);
     if (status != 0)
     {
         char error_message[200] = "Error: cannot find ";
-        strcat(error_message, name);
+        strcat(error_message, name)
+        ;
         write_error_line(error_message);
         exit(EX_UNAVAILABLE);
     }
@@ -153,7 +167,7 @@ void has_executable(const char *name)
 // Has at least 1G free space?
 void has_enough_free_space()
 {
-    char *command_line = "test $(df --block-size G . | tail -1 | grep -E -o '[0-9.]+G[ ]++[0-9]+%' | grep -E -o '^[0-9]+') -gt 1";
+    char* command_line = "test $(df --block-size G . | tail -1 | grep -E -o '[0-9.]+G[ ]++[0-9]+%' | grep -E -o '^[0-9]+') -gt 1";
     int status = system(command_line);
     if (status != 0)
     {
@@ -173,9 +187,15 @@ void sequential_read_test()
 
 void build_dd_command_line(char* dd, char* temporary_file)
 {
-    strcat(dd, "dd if=/dev/zero of=");
-    strcat(dd, temporary_file);
-    strcat(dd, " bs=1M count=1024 conv=fdatasync,notrunc 2>&1 > /dev/null | grep -E -o '[0-9.]+ [GM]B/s'");
+    strcat(dd, "dd if=/dev/zero of=")
+    ;
+    strcat(dd, temporary_file)
+    ;
+    strcat(
+        dd,
+        " bs=1M count=1024 conv=fdatasync,notrunc 2>&1 > /dev/null | grep -E -o '[0-9.]+ [GM]B/s'"
+        )
+    ;
 }
 
 /* Generates a 32 bytes string. */
@@ -183,9 +203,11 @@ void random_alphanum(char* result, int length)
 {
     char* alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (int i = 0; i < length ; i++) {
-        result[i] = alphanum[rand() % 62];
+        result[i] = alphanum[rand() % 62]
+        ;
     }
-    result[length] = '\0';
+    result[length] = '\0'
+    ;
 }
 
 void sequential_write_test()
@@ -195,9 +217,11 @@ void sequential_write_test()
     for (int i = 3; i > 0; i--)
     {
         char temporary_file[32 + 1] = "";
-        random_alphanum(temporary_file, 32);
+        random_alphanum(temporary_file, 32)
+        ;
         char dd[200] = "";
-        build_dd_command_line(dd, temporary_file);
+        build_dd_command_line(dd, temporary_file)
+        ;
         exec(dd, write_report);
         int is_deleted = remove(temporary_file);
         if (is_deleted != 0)
@@ -213,5 +237,4 @@ int main()
 {
     sequential_read_test();
     sequential_write_test();
-
 }
